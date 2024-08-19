@@ -1,0 +1,94 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+
+import org.firstinspires.ftc.robotcontroller.external.samples.BasicOpMode_Iterative;
+@TeleOp(name = "Example")
+
+
+public class test extends BasicOpMode_Iterative {
+   //create motors
+   private DcMotor motor1 = null;
+   private DcMotor motor2 = null;
+
+
+   @Override
+   public void init() {
+       //what is final?
+       final int COUNTS_PER_MOTOR_REV = 1120;
+       //initialize motor + name them m1 and m2
+       motor1 = hardwareMap.dcMotor.get("m1");
+       motor2 = hardwareMap.dcMotor.get("m2");
+
+
+       //motors are technically in reverse so the numbers are not confusing about negatives (only for left wheels)
+       motor1.setDirection(DcMotor.Direction.REVERSE);
+   }
+
+
+   //movement
+   @Override
+   public void loop() {
+
+
+       //don't move if nothing is being controlled
+       //for safety reasons
+
+
+       if ((gamepad1.left_stick_x == 0) && (gamepad1.right_stick_y == 0) && (!gamepad1.right_bumper) && (!gamepad1.left_bumper)) {
+           motor1.setPower(0);
+           motor2.setPower(0);
+       }
+
+
+       //forward
+       if (gamepad1.right_stick_y != 0) {
+           double power = gamepad1.right_stick_y;
+           motor1.setPower(1*power);
+           motor2.setPower(1*power);
+
+
+           //send info to controller (or whatever it's called)
+           telemetry.addData("right stick y", "value", gamepad1.right_stick_y);
+       }
+
+
+       //turn
+       if (gamepad1.left_stick_x != 0) {
+           double turn = gamepad1.left_stick_y;
+           motor1.setPower(-1*turn);
+           motor2.setPower(1*turn);
+
+
+           telemetry.addData("left stick x", "value", gamepad1.left_stick_x);
+       }
+
+
+       //shuffle right
+       boolean shuffleright = gamepad1.right_bumper;
+       if (shuffleright) {
+           motor1.setPower(1);
+           motor2.setPower(1);
+
+
+           telemetry.addData("right bumper", "shuffle right", gamepad1.right_bumper);
+       }
+
+
+       //shuffle left
+       boolean shuffleleft = gamepad1.left_bumper;
+       if (shuffleleft) {
+           motor1.setPower(1);
+           motor2.setPower(1);
+
+
+           telemetry.addData("left bumper", "shuffle left", gamepad1.left_bumper);
+       }
+   }
+
+
+}
